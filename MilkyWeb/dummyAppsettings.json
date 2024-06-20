@@ -1,0 +1,21 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=****;Trusted_Connection=True;TrustServerCertificate=True;",
+    "ApplicationDbContextConnection": "Server=(localdb)\\mssqllocaldb;Database=EnterDbName;Trusted_Connection=True;MultipleActiveResultSets=true"
+  },
+  "Stripe": {
+    "SecretKey": "Your Secret Key",
+    "PublishableKey": "Your Publishable Key"
+  },
+  "Postmark": {
+    "ServerApiToken": "Your Api Token" // new token set.
+  }
+
+}

@@ -1,0 +1,414 @@
+﻿@model ShoppingCartVM
+
+
+<form method="post">
+	<div class="container">
+		<div class="row">
+
+			@* first column 70% *@
+			<div class="col-lg-9 col-md-12 col-sm-12">
+				<div class="card shadow border-0">
+					<div class="card-body">
+						@* content for first column *@
+						<div class="card-header-tabs mb-5">
+							<div class="row">
+								<h1 class="roboto-slab-heading">Shopping Cart</h1>
+								<style>
+									.roboto-slab-heading {
+										font-family: "Roboto Slab", serif;
+										font-optical-sizing: auto;
+										font-weight: 600; 
+										font-style: normal;
+									}
+								</style>
+							</div>
+							<div class="row mt-0">
+								<div class="col-md-12">
+									<div class="d-flex justify-content-between">
+										<div>
+											<a id="clear-cart-link" asp-action="ClearCart" class="btn btn-danger btn-sm">
+												<i class="bi bi-trash-fill"></i> Clear Cart
+											</a>
+										</div>
+										<div class="me-auto ms-3">
+											<a asp-area="Customer" asp-controller="Home" asp-action="Index" class="btn btn-outline-primary text-uppercase btn-sm">Continue Shopping</a>
+										</div>
+									</div>
+								</div>
+								<div class="break-line mt-2"></div>
+
+								<div class="row mt-2">
+									<div class="col-md-12">
+										<div class="card">
+											<div class="card-header d-flex justify-content-between align-items-center">
+
+												@if (Model.ShoppingCartList.Count() == 0)
+												{
+													<h5 class="roboto-slab-heading">Your Cart is empty.</h5>
+												}
+												else
+												{
+													<h5 class="roboto-slab-heading">Active Items</h5>
+
+													<!-- Invisible Product Title Column -->
+													<span class="invisible d-md-inline">Product Title</span>
+
+													<!-- Price Column -->
+													<span class="price-label ml-auto d-none d-lg-inline" style="margin-right: -8px;">Price</span>
+
+													<!-- Delete Button Column -->
+													<span class="invisible d-md-inline">Delete</span>
+												}
+
+
+											</div>
+											<div class="card-body">
+												@foreach (var item in Model.ShoppingCartList)
+												{
+													<div class="row">
+														<!-- Product Image Column -->
+														<div class="col-md-3">
+															<img src="@item.Product.ImageUrl" alt="Product Image" class="img-fluid rounded mb-2" width="100%">
+														</div>
+
+														<!-- Product Title Column -->
+														<div class="col-md-5">
+															<h5 class="text-secondary fw-semibold">@item.Product.ProductName</h5>
+															@if (item.Product.isItemInStock == "In Stock")
+															{
+																<p>
+																	<span style="color: #007600; font-family: 'Mukta-ExtraBold'; font-size:17px;">In Stock</span>
+																</p>
+															}
+															else
+															{
+																<p>
+																	<span style="color: #007600; font-family: 'Mukta-ExtraBold'; font-size:17px;">Out Of Stock</span>
+																</p>
+															}
+
+															<div class="d-flex quantity-selector mb-3">
+																<!-- Removed the quantity label -->
+																<i class="bi bi-dash" onclick="decreaseQuantity(@item.Id)"></i>
+																<input type="number" class="form-control quantity-input custom-width" id="quantityInput_@item.Id" value="@item.Count" oninput="updateQuantity(@item.Id)" asp-for="@(item.Count)" readonly>
+																<i class="bi bi-plus" onclick="increaseQuantity(@item.Id,@item.Product.MaxNumberOfItemsInStock)"></i>
+															</div>
+
+															<style>
+																/* Text Box Width Adjust */
+																.custom-width {
+																	width: 50px; /* Reduced width for smaller size */
+																}
+
+																/* Styling for icons */
+																.quantity-selector i {
+																	font-size: 1.2em; /* Reduced font size */
+																	cursor: pointer;
+																	border: 1px solid #ced4da; /* Border color matching input area */
+																	border-radius: 0; /* Remove border-radius to make it visually connected */
+																	padding: 0.25rem; /* padding for spacing */
+																	margin: 0 -1px; /* Adjust margin to visually connect icons */
+																	background-color: #f9f9f9; /* background color to match input area */
+																}
+
+																/* styling for input area */
+																.quantity-selector input {
+																	border: 1px solid #ced4da;
+																	border-radius: 0;
+																	margin: 0;
+																	text-align: center; /* Center text horizontally */
+																	padding-right: 0; 
+																}
+
+																/* styling for label */
+																.quantity-selector span {
+																	margin-right: 11px;
+																	margin-top: 4px;
+																	display: flex;
+																}
+															</style>
+
+														</div>
+
+														<!-- Price Column -->
+														<div class="col-md-2 fw-semibold">
+															<span>@item.Price.ToString("c")</span>
+															<span class="text-muted">&nbsp;x&nbsp;</span><span id="count_@item.Id">@item.Count</span>
+														</div>
+
+														<!-- Delete Button Column -->
+														<div class="col-md-1 text-end">
+															<a asp-action="Remove" asp-route-cartId="@item.Id" class="btn btn-danger mb-2 btn-sm">
+																<i class="bi bi-trash-fill"></i>
+															</a>
+														</div>
+													</div>
+
+													<div class="break-line"></div>
+												}
+											</div>
+
+											<div class="card-footer">
+												<div class="row">
+													<div class="col-md-12 text-end">
+														<span class="text-secondary fw-semibold">Subtotal (<span id="totalProductCount">@Model.ShoppingCartList.Count()</span> items):</span>
+														<strong> <span id="orderTotal">@Model.OrderHeader.OrderTotal.ToString("c")</span></strong>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<style>
+
+									.break-line {
+										position: relative;
+										/* border-bottom: 1px solid #bfc3c3; */
+										margin-bottom: 10px;
+									}
+
+										.break-line::before {
+											content: " ";
+											position: absolute;
+											top: 50%;
+											width: 97%; /* Adjust the width as needed */
+											height: 1px;
+											background-color: #bfc3c3;
+										}
+
+								</style>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			@* second column  30% *@
+			<div class="col-lg-3 col-md-12 col-sm-12">
+				<div class="card shadow border-0">
+					<div class="card-header">
+						<div class="row">
+							<div class="col-12 text-start">
+								<span class="text-secondary fw-semibold">Subtotal (<span id="totalProductCount1">@Model.ShoppingCartList.Count()</span> item):</span>
+								<strong> <span id="orderTotal1">@Model.OrderHeader.OrderTotal.ToString("c")</span></strong>
+							</div>
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="d-flex justify-content-center mb-2">
+							<a asp-action="Summary" class="btn btn-primary btn-sm w-100 text-center">Proceed to Buy</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@section Scripts {
+		<script src="~/lib/jquery/dist/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+		<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+		<script>
+			function increaseQuantity(itemId, maxItemsInStock) {
+				var quantityInput = document.getElementById('quantityInput_' + itemId); //find quantity input element
+				if (!quantityInput) {
+					console.error('Quantity input for item ID ' + itemId + ' not found.');
+					return;
+				}
+
+				var currentQuantity = parseInt(quantityInput.value); //get quantity input value
+
+				if (currentQuantity < maxItemsInStock) {         //condition
+					quantityInput.value = currentQuantity + 1;   //increment by 1
+				} else {
+					// Display a message or handle the case where the max limit is reached
+					console.log('Maximum limit reached');
+				}
+
+				updateQuantity(itemId);  //call updateQuantity
+			}
+
+			function decreaseQuantity(itemId) {
+				var quantityInput = document.getElementById('quantityInput_' + itemId);
+				if (!quantityInput) {
+					console.error('Quantity input for item ID ' + itemId + ' not found.');
+					return;
+				}
+
+				if (parseInt(quantityInput.value) > 0) {
+					quantityInput.value = parseInt(quantityInput.value) - 1;
+				}
+				updateQuantity(itemId);
+			}
+
+			function updateQuantity(itemId) {
+				var quantityInput = document.getElementById('quantityInput_' + itemId);
+				if (!quantityInput) {
+					console.error('Quantity input for item ID ' + itemId + ' not found.');
+					return;
+				}
+
+				var currentQuantity = parseInt(quantityInput.value);
+
+				// Send AJAX request to update quantity
+				$.ajax({
+					type: 'POST',
+					url: '/Customer/Cart/UpdateQuantity',
+					data: { itemId: itemId, quantity: currentQuantity },
+					success: function (response) {
+						// Handle the response
+						console.log('Update successful:', response);
+
+						if (response.deleted) {
+							// Remove the corresponding HTML elements from the page
+							var countElement = document.getElementById('count_' + response.itemId);
+							var parentDiv = countElement.closest('.row');
+							var breakLine = parentDiv.nextElementSibling; // Get the next sibling element which should be the break-line div
+							parentDiv.remove(); // Remove the entire parent div containing the item
+							if (breakLine && breakLine.classList.contains('break-line')) {
+								breakLine.remove(); // Remove the break-line div if found
+							}
+							// Display success toastr notification
+							toastr.success('Product removed from cart successfully');
+
+							// Update order total
+							updateOrderTotal(response.newOrderTotal);
+
+							updateTotalProductCount(response.totalProductCount);
+
+							// Update cart count in the layout
+							updateCartCount(response.totalProductCount);
+
+							// // Update the count of items in the cart
+							// updateCartItemCount(response.newCartItemCount);
+
+						} else {
+							// Update count on success
+							updateCount(response.itemId, response.newCount);
+
+							// Update order total
+							updateOrderTotal(response.newOrderTotal);
+
+							// Update the count of items in the cart
+							updateCartItemCount(response.newCartItemCount);
+
+						}
+
+						// // Update cart count in the layout
+						// updateCartCount(response.totalProductCount);
+
+					},
+					error: function (xhr, status, error) {
+						console.error('Error updating quantity:', error);
+					}
+				});
+
+				// Log the current quantity to the console
+				console.log('Current Quantity for Item ID ' + itemId + ':', currentQuantity);
+			}
+
+			// Update the JavaScript function to update the price count element
+			function updateCount(itemId, newCount) {
+				var countElement = document.getElementById('count_' + itemId);
+				if (!countElement) {
+					console.error('Count element for item ID ' + itemId + ' not found.');
+					return;
+				}
+
+				countElement.innerText = newCount; // Update the count element
+			}
+
+			// Function to update the count of items in the cart
+			function updateCartItemCount(newItemCount) {
+				var itemCountElement = document.getElementById('cartItemCount');
+				if (itemCountElement) {
+					itemCountElement.innerText = newItemCount;
+				}
+			}
+
+			// // Function to update the total product count in the footer
+			// function updateTotalProductCount(newTotalProductCount) {
+			// 	var totalCountElement = document.getElementById('totalProductCount');
+			// 	if (totalCountElement) {
+			// 		totalCountElement.innerText = newTotalProductCount;
+			// 	}
+			// }
+
+			function updateTotalProductCount(newTotalProductCount) {
+				var totalCountElementIds = ['totalProductCount', 'totalProductCount1'];
+
+				totalCountElementIds.forEach(function (id) {
+					var totalCountElement = document.getElementById(id);
+					if (totalCountElement) {
+						totalCountElement.innerText = newTotalProductCount;
+					}
+				});
+			}
+
+			// function updateOrderTotal(newOrderTotal) {
+			// 	var orderTotalElement = document.getElementById('orderTotal');
+			// 	if (orderTotalElement) {
+			// 		orderTotalElement.innerText = newOrderTotal.toLocaleString('en-IN', {
+			// 			style: 'currency',
+			// 			currency: 'INR'
+			// 		}) ?? '';
+			// 	}
+			// }
+
+
+			function updateOrderTotal(newOrderTotal) {
+				var orderTotalElementIds = ['orderTotal', 'orderTotal1'];
+
+				orderTotalElementIds.forEach(function (id) {
+					var orderTotalElement = document.getElementById(id);
+					if (orderTotalElement) {
+						orderTotalElement.innerText = newOrderTotal.toLocaleString('en-IN', {
+							style: 'currency',
+							currency: 'INR'
+						}) ?? '';
+					}
+				});
+			}
+
+			// Function to update the cart count in the layout
+			function updateCartCount(newCartCount) {
+				var cartCountElement = document.getElementById('cartCount');
+				if (cartCountElement) {
+					// cartCountElement.innerText = newCartCount;
+					cartCountElement.innerText = '(' + newCartCount + ')';
+				}
+			}
+
+		</script>
+
+		<script>
+			// Add event listener to the Clear Cart link
+			document.getElementById('clear-cart-link').addEventListener('click', function (event) {
+				// Prevent the default behavior of the link (i.e., navigating to the ClearCart action)
+				event.preventDefault();
+
+				// Display SweetAlert2 confirmation dialog
+				Swal.fire({
+					title: "Are you sure?",
+					text: "You won't be able to revert this!",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#3085d6",
+					cancelButtonColor: "#d33",
+					confirmButtonText: "Yes, delete it!"
+				}).then((result) => {
+					if (result.isConfirmed) {
+						// If user confirms, navigate to the ClearCart action
+						window.location.href = event.target.href;
+					}
+				});
+			});
+		</script>
+	}
+
+</form>
+

@@ -1,0 +1,268 @@
+﻿@model ProductVM
+
+<div class="card shadow border-0 my-4">
+	<div class="card-header bg-secondary bg-gradient ml-0 py-3">
+		<div class="row">
+			<div class="col-12 text-center">
+				<h2 class="text-white py-2"> @(Model.Product.id != 0 ? "Update": "Create")Product</h2>
+			</div>
+		</div>
+	</div>
+	<div class="card-body p-4">
+	
+		<form method="post" class ="row" enctype="multipart/form-data">
+			<input asp-for="Product.id" hidden/>
+			<input asp-for="Product.ImageUrl" hidden/>
+			<div class ="row">
+				<div class="col-10">
+					<div class="border p-3">
+
+						<div class="form-floating py-2 col-12 ">
+							<input asp-for="Product.ProductName" class="form-control border-0 shadow" />
+							<label asp-for="Product.ProductName" class="ms-2"></label>
+							<span asp-validation-for="Product.ProductName" class="text-danger"></span> 
+						</div>
+						<div class="py-2 col-12">
+							<label asp-for="Product.Description" class="ms-2 text-muted "></label>
+							<textarea asp-for="Product.Description" class="form-control border-0 shadow"> </textarea>
+						</div>
+						<div class="form-floating py-2 col-12 ">
+							<input asp-for="Product.MilkFat" class="form-control border-0 shadow" />
+							<label asp-for="Product.MilkFat" class="ms-2"></label>
+							<span asp-validation-for="Product.MilkFat" class="text-danger"></span> 
+						</div>
+						<div class="form-floating py-2 col-12 ">
+							<input asp-for="Product.Price" class="form-control border-0 shadow" />
+							<label asp-for="Product.Price" class="ms-2">Price Per Litre</label>
+							<span asp-validation-for="Product.Price" class="text-danger"></span> 
+						</div>
+						<div class="form-floating py-2 col-12">
+							<select asp-for="Product.TaxIncluded" asp-items="Model.IsTaxIncludedOptions" class="form-select border-0 shadow">
+								<option disabled selected>--Select Tax Included--</option>
+							</select>
+							<label asp-for="Product.TaxIncluded" class="ms-2"></label>
+							<span asp-validation-for="Product.TaxIncluded" class="text-danger"></span>
+						</div>
+						<div class="form-floating py-2 col-12 ">
+							<input type="file" name="file" class="form-control border-0 shadow" />
+							<label asp-for="Product.ImageUrl" class="ms-2"></label>
+						</div>
+						<div class="form-floating py-2 col-12">
+							<select asp-for="@Model.Product.CategoryID" asp-items="@Model.CategoryList" class="form-select border-0 shadow">
+								<option disabled selected>--Select Category--</option>
+							</select>
+							<label asp-for="Product.CategoryID" class="ms-2"></label>
+							<span asp-validation-for="Product.CategoryID" class="text-danger"></span>
+						</div>
+						<div class="form-floating py-2 col-12">
+							<select asp-for="Product.BiologicalSource" asp-items="Model.biologicalSourceOptions" class="form-select border-0 shadow">
+								<option disabled selected>--Select Biological Source--</option>
+							</select>
+							<label asp-for="Product.BiologicalSource" class="ms-2">Biological Source (Optional)</label>
+							<span asp-validation-for="Product.BiologicalSource" class="text-danger"></span>
+						</div>
+
+						<div id ="flavorDiv" class="form-floating py-2 col-12">
+							<select id="flavorSelect" asp-for="Product.Flavour" asp-items="Model.flavorOptions" class="form-select border-0 shadow">
+								<option disabled selected>--Select Flavour--</option>
+							</select>
+							<label asp-for="Product.Flavour" class="ms-2">Flavor (Optional)</label>
+							<span asp-validation-for="Product.Flavour" class="text-danger"></span>
+						</div>
+
+						<div class="row">
+							<!-- Left column for NetQuantity input -->
+							<div class="col-md-6">
+								<div class="form-floating py-2">
+									<input asp-for="Product.NetQuantity" class="form-control border-0 shadow" onfocus="clearNetQuantity()" />
+									<label asp-for="Product.NetQuantity" class="ms-2">Net Quantity (Optional)</label>
+									<span asp-validation-for="Product.NetQuantity" class="text-danger"></span>
+								</div>
+							</div>
+
+							<!-- Right column for unit selection -->
+							<div class="col-md-6">
+								<div class="form-floating py-2">
+									<select asp-for="SelectedUnit" asp-items="Model.UnitOptions" class="form-select border-0 shadow">
+										<option disabled selected>--Select Unit--</option>
+									</select>
+									<label>Unit</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-floating py-2 col-12">
+							<select asp-for="Product.ItemForm" asp-items="Model.ItemFormOptions" class="form-select border-0 shadow">
+								<option disabled selected>--Select Item Form--</option>
+							</select>
+							<label asp-for="Product.ItemForm" class="ms-2">Item Form (Optional)</label>
+							<span asp-validation-for="Product.ItemForm" class="text-danger"></span>
+						</div>
+
+						<div class="form-floating py-2 col-12">
+							<select asp-for="Product.DietType" asp-items="Model.DietTypeOptions" class="form-select border-0 shadow">
+								<option disabled selected>--Select Diet Type--</option>
+							</select>
+							<label asp-for="Product.DietType" class="ms-2">Diet Type (Optional)</label>
+							<span asp-validation-for="Product.DietType" class="text-danger"></span>
+						</div>
+
+						<div class="form-floating py-2 col-12 ">
+							<input asp-for="Product.NumberOfItems" class="form-control border-0 shadow" />
+							<label asp-for="Product.NumberOfItems" class="ms-2"></label>
+							<span asp-validation-for="Product.NumberOfItems" class="text-danger"></span> 
+						</div>
+
+						<div class="form-floating py-2 col-12">
+							<select asp-for="Product.isItemInStock" asp-items="Model.isItemInStockOptions" class="form-select border-0 shadow">
+								<option disabled selected>--Select Stock Status--</option>
+							</select>
+							<label asp-for="Product.isItemInStock" class="ms-2">Stock Availability (Optional)</label>
+							<span asp-validation-for="Product.isItemInStock" class="text-danger"></span>
+						</div>
+
+						<div id="maxItemDiv" class="form-floating py-2 col-12 ">
+							<input asp-for="Product.MaxNumberOfItemsInStock" class="form-control border-0 shadow" />
+							<label asp-for="Product.MaxNumberOfItemsInStock" class="ms-2"></label>
+							<span asp-validation-for="Product.MaxNumberOfItemsInStock" class="text-danger"></span> 
+						</div>
+
+
+
+
+
+						<div class="row pt-2">
+							<div class="col-6 col-md-3">
+								@if (Model.Product.id != 0)
+								{
+									<button type="submit" class="btn btn-primary form-control">Update</button>
+								}
+								else
+								{
+									<button type="submit" class="btn btn-primary form-control">Create</button>
+								}
+							</div>
+							<div class="col-6 col-md-3">
+								<a asp-controller="Product" asp-action="Index" class="btn btn-outline-primary border form-control">Back To List</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-2">
+					<img src="@Model.Product.ImageUrl" width="100%"
+						 style="border-radius:5px; border:1px solid #bbb9b9" />
+				</div>
+			</div>
+
+		</form>
+	</div>
+</div>
+
+
+
+@section Scripts{
+	<script>
+		tinymce.init({
+			selector: 'textarea',
+			plugins: 'anchor autolink charmap codesample emoticons  lists   table visualblocks wordcount',
+			toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough |  align lineheight | numlist bullist indent outdent',
+		});
+	</script>
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var createUpdateForm = document.querySelector('form');
+			createUpdateForm.addEventListener('submit', function (event) {
+				// Check for validation errors
+				var validationErrors = document.querySelectorAll('.text-danger');
+				if (validationErrors.length > 0) {
+					var errorMessages = [];
+					validationErrors.forEach(function (error) {
+						var inputId = error.getAttribute('data-valmsg-for');
+						var input = document.getElementById(inputId);
+						if (input) {
+							var errorMessage = error.textContent.trim();
+							errorMessages.push(input.getAttribute('placeholder') + ': ' + errorMessage);
+						}
+					});
+					if (errorMessages.length > 0) {
+						alert('Validation Errors:\n' + errorMessages.join('\n'));
+						event.preventDefault(); // Prevent form submission
+					}
+				}
+			});
+		});
+	</script>
+
+	<script>
+		function clearNetQuantity() {
+			document.getElementById('@Html.IdFor(model => model.Product.NetQuantity)').value = '';
+		}
+	</script>
+
+	<script>
+		$(document).ready(function () {
+			// Initially hide the flavor select element
+			$('#flavorDiv').hide();
+
+			// Add change event listener to the category select element
+			$('[name="Product.CategoryID"]').change(function () {
+				console.log('Category changed:', $(this).val());
+
+				// Check if the selected category has ID 1 (1 is the ID for "Milk")
+				if (parseInt($(this).val()) === 1) {
+					console.log('Show flavor div');
+					// If the category ID is 1 (Milk), show the flavor select element
+					$('#flavorDiv').show();
+				} else {
+					console.log('Hide flavor select');
+					// If a category other than "Milk" is selected, hide the flavor select element
+					$('#flavorDiv').hide();
+				}
+
+			});
+		});
+	</script>
+
+	<script>
+		$(document).ready(function () {
+			// Initially hide the maxItemDiv element
+			$('#maxItemDiv').hide();
+
+			// Add change event listener to the isItemInStock select element
+			$('[name="Product.isItemInStock"]').change(function () {
+				console.log('Stock status changed:', $(this).val());
+
+				// Check if the selected stock status is "In Stock"
+				if ($(this).val() === "In Stock") {
+					console.log('Show maxItemDiv');
+					// If "In Stock" is selected, show the maxItemDiv element
+					$('#maxItemDiv').show();
+				} else {
+					console.log('Hide maxItemDiv');
+					// If a stock status other than "In Stock" is selected, hide the maxItemDiv element
+					$('#maxItemDiv').hide();
+
+					// Reset the isItemInStock to 0 when "Out of Stock" is selected
+					$('[name="Product.isItemInStock"]').val("Out Of Stock");
+					$('[name="Product.MaxNumberOfItemsInStock"]').val(0);
+				}
+			});
+
+					//Check if MaxNumberOfItemsInStock is 0, then set isItemInStock to "Out of Stock"
+			if (@Model.Product.MaxNumberOfItemsInStock == 0) {
+				$('[name="Product.isItemInStock"]').val("Out Of Stock").change(); // Trigger the change event
+			}
+
+			// Trigger the change event to initialize the stock status
+			$('[name="Product.isItemInStock"]').change();
+
+		});
+	</script>
+
+
+
+
+}

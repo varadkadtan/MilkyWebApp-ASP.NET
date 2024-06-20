@@ -1,0 +1,900 @@
+﻿@* @model Product *@
+@model ShoppingCart
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
+<form method = "post" asp-action="Buy" asp-controller="Home" >
+    <input hidden asp-for="ProductId" />
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        
+        <div class="col-lg-3 col-md-12 mt-5">
+            <!-- Left column (reserved space) -->
+            <img src="@Model.Product.ImageUrl" alt="Product Image" class="img-fluid scale-up centered-pic">
+        </div>
+    
+<style>
+    /* Custom styling for the product name */
+    .scale-up {
+        transform: scale(1.2); 
+        transition: transform 0.3s ease; /* smooth transition effect */
+    }
+
+    .centered-pic {
+                display:block;
+        /* margin-left: -15px; */
+        margin-left:auto;
+        margin-right: auto;
+        margin-bottom: 40px;
+        margin-top: 5px;
+        max-width: 100%; 
+    }
+
+    /* Responsive styles using Bootstrap classes */
+            @@media (max-width: 768px) {
+                .col-lg-3 {
+                    flex: 0 0 100%;
+                    max-width: 100%;
+                    align-items:center;
+                }
+            }
+
+            @@media(min-width:992px){
+                .col-lg-3{
+                    margin-right:10px;
+                }
+            }
+</style>
+
+
+        <div class="col-lg-6 col-md-12 d-flex align-items-center justify-content-center custom-center-col">
+            <!-- Center column for your content -->
+            <div id="centerCol" class="centerColAlign w-100" style="margin-left: 50px; margin-right: -10px; max-width: 100%;">
+
+                <style>
+    /* Custom styling for the center column */
+    @@media (max-width: 768px) {
+        .custom-center-col {
+            /* text-align: center; */
+            margin-left: -50px;
+            margin-right: 0;
+        }
+
+        #centerCol {
+            margin-left: 0;
+            margin-right: 0;
+        }
+                    }
+     @@media(min-width: 768px){
+                        .custom-center-col.col-md-12 {
+                            margin-left: -35px;
+                        }
+                    }
+
+</style>
+
+        <div id="title_feature_div" class="celwidget" data-feature-name="title" data-csa-c-type="widget" data-csa-c-content-id="title" data-csa-c-slot-id="title_feature_div" data-csa-c-asin="B0129KE4WS" data-csa-c-is-in-initial-active-row="false" data-csa-c-id="h1hmp4-bd01ix-hbh6sn-ejy6rf" data-cel-widget="title_feature_div">
+                    <div id="titleSection" class="a-section a-spacing-none">
+                        <h1 id="title" class="a-size-large a-spacing-none">
+                            <span id="productTitle" class="a-size-large product-title-word-break">
+                                @Model.Product.ProductName
+                            </span>
+                            <span id="titleEDPPlaceHolder"></span>
+                        </h1>
+                        <div id="expandTitleToggle" class="a-section a-spacing-none expand aok-hidden"></div>
+
+                        <div id="bylineInfo_feature_div" class="celwidget" data-feature-name="bylineInfo" data-csa-c-type="widget" data-csa-c-content-id="bylineInfo" data-csa-c-slot-id="bylineInfo_feature_div" data-csa-c-asin="B0129KE4WS" data-csa-c-is-in-initial-active-row="false" data-csa-c-id="a23fis-lcymye-yegpne-3rs2uv" data-cel-widget="bylineInfo_feature_div">
+                            <div class="a-section a-spacing-none">
+                                <span id="category" class="a-size-medium">
+                                    Category: @Model.Product.Category.name
+                                </span>
+                                <div id="category-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <style type="text/css">
+                        .product-title-word-break {
+                            word-break: break-word;
+                        }
+
+                        #titleSection {
+                            margin: 20px auto; 
+                            -webkit-text-size-adjust: 100%;
+                            font-size: 14px;
+                            line-height: 20px;
+                            color: #0F1111;
+                            font-family: "Amazon Ember", Arial, sans-serif;
+                            box-sizing: border-box;
+                        }
+
+                        #title {
+                            font-size: 24px;
+                            line-height: 30px;
+                        }
+
+                        #category {
+                            font-size: 16px;
+                            line-height: 24px;
+                            color: #30818b; 
+                        }
+
+                        #bylineInfo_feature_div {
+                            margin-top: -8px; 
+                        }
+
+                        #category-line {
+                            border-bottom: 1px solid #bfc3c3; /* Add a black horizontal line (border) */
+                            margin-bottom: 10px; 
+                        }
+
+                    </style>
+                </div>
+
+                <div id="price-container">
+                    <div id="price" class="a-section a-spacing-none">
+                        <span aria-hidden="true">
+                            @* <span aria-hidden="true" id="rupee-symbol">₹</span> *@
+                                <span class="a-price-whole">@Model.Product.Price.ToString("c")</span>
+                        </span>
+                    </div>
+                    <style type="text/css">
+                        #price {
+                            font-size: 35px; /* Adjust the font size for the price */
+                            color: #0F1111; /* Set the color of the price */
+                            margin-top: -10px; 
+                            vertical-align: top;
+                            display: inline-block;
+                        }
+
+                        #rupee-symbol {
+                            font-size: 60%; /* Adjust the font size for the rupee symbol */
+                            vertical-align: top; /* Move the rupee symbol to the top */
+                            position: relative;
+                            top: 5px; 
+                        }
+
+                        #price .a-price-whole {
+                            margin-left: 0px; /* value to bring the price closer to the rupee symbol */
+                                font-size: 30px;
+                        }
+                    </style>
+                </div>
+
+                @if (Model.Product.TaxIncluded == "Yes")
+                {
+                    <div>
+                        <p>Inclusive of all taxes</p>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <p>Exclusive of all taxes</p>
+                    </div>
+                }
+
+                <div id="icon-farm-container" class="a-section a-spacing-none" data-csa-c-asin="B0CKRH33B2" data-csa-c-content-id="trust-widget-desktop" data-csa-c-slot-id="trust-widget" data-csa-c-type="widget" class="a-section a-spacing-none" data-csa-c-id="hyo9d7-leorzi-k826ic-cu2fdi">
+                    <div class="icon-farm-wrapper">
+                        <!-- Item 1 -->
+                        <div data-buying-option-index="0" data-csa-c-element-type="navigational" data-csa-c-posx="0" data-csa-c-type="uxElement" data-icon-content="icon-container-728c0c80-a013-40f2-8229-b9f23074d1fc" data-name="FREE_DELIVERY" data-type="custom-pop-over" id="FREE_DELIVERY" class="a-column a-span3 a-text-center icon-container icon-grid-width celwidget a-declarative" data-csa-c-id="gs0mh4-gfl51s-hxiq5-oz9yo1" data-cel-widget="FREE_DELIVERY">
+                            <div class="a-section a-spacing-none">
+                                <img src="~/images/siteIcons/takeawaydelivery.png" class="a-image-wrapper a-manually-loaded icon-box" id="" alt="Free Delivery">
+                            </div>
+                            <div class="a-section a-spacing-none icon-content">
+                                <span class="a-size-small a-color-link a-text-normal"> Takeaway Delivery </span>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div data-buying-option-index="0" data-csa-c-element-type="navigational" data-csa-c-posx="1" data-csa-c-type="uxElement" data-icon-content="icon-farm-secondary-view-holder" data-name="RETURNS_POLICY" data-type="pop-over" id="RETURNS_POLICY" class="a-column a-span3 a-text-center icon-container icon-grid-width celwidget" data-csa-c-id="193vsu-g0oh5c-wfuagd-3q1e9u" data-cel-widget="RETURNS_POLICY">
+                            <div class="a-section a-spacing-none">
+                                <img src="~/images/siteIcons/notreturnable.png" class="a-image-wrapper a-manually-loaded icon-box" id="" alt="Non-Returnable">
+                            </div>
+                            <div class="a-section a-spacing-none icon-content">
+                                <span class="a-size-small a-color-link a-text-normal"> Non-Returnable </span>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div data-buying-option-index="0" data-csa-c-element-type="navigational" data-csa-c-posx="2" data-csa-c-type="uxElement" data-icon-content="icon-container-1fff0606-68dd-4d1f-a91f-000ef671fb75" data-name="AMAZON_DELIVERED" data-type="custom-pop-over" id="AMAZON_DELIVERED" class="a-column a-span3 a-text-center icon-container icon-grid-width celwidget a-declarative" data-csa-c-id="eglgv2-ljzgyr-7zwg5o-coy7ll" data-cel-widget="AMAZON_DELIVERED">
+                            <div class="a-section a-spacing-none">
+                                <img src="~/images/siteIcons/securepayment.png" class="a-image-wrapper a-manually-loaded icon-box" id="" alt="Amazon Delivered">
+                            </div>
+                            <div class="a-section a-spacing-none icon-content">
+                                <span class="a-size-small a-color-link a-text-normal"> Secure Payment </span>
+                            </div>
+                        </div>
+                    </div>
+                    <style type="text/css">
+                        .icon-farm-wrapper {
+                            /* styles for horizontal display */
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            flex-wrap: wrap;
+                            /* Add border styles */
+                            border: 1px solid #bfc3c3; /* 1px solid border with color #30818b */
+                            padding: 10px; /* padding for spacing inside the border */
+                        }
+
+                        .icon-container {
+                            /* styles for each icon container */
+                            box-sizing: border-box;
+                            width: 30%; 
+                            text-align: center;
+                            margin: 10px 0; 
+                        }
+
+                        .icon-content {
+                            /* styles for icon content */
+                            margin-top: 5px; 
+                            color: #30818b;
+                        }
+
+                        .icon-box {
+                            /* Adjust styles for the icon images */
+                            height: 35px;
+                            width: 35px;
+                        }
+                    </style>
+                </div>
+
+                <!-- Spacing -->
+                <div style="height: 20px;"></div>
+                <!-- Table and styling container -->
+                <div id="itemDetailsContainer">
+                    <!-- Table for item details -->
+                    <table class="table">
+                        @* <thead>
+                        <tr>
+                        <th>Attribute</th>
+                        <th>Value</th>
+                        </tr>
+                        </thead> *@
+                        <tbody>
+                            @if (!string.IsNullOrEmpty(Model.Product.MilkFat))
+                            {
+                                <tr>
+                                    <td>Milk Fat Percent</td>
+                                    <td>@Model.Product.MilkFat</td>
+                                </tr>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.Product.BiologicalSource))
+                            {
+                                <tr>
+                                    <td>Biological Source</td>
+                                    <td>@Model.Product.BiologicalSource</td>
+                                </tr>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.Product.Flavour))
+                            {
+                                <tr>
+                                    <td>Flavour</td>
+                                    <td>@Model.Product.Flavour</td>
+                                </tr>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.Product.NetQuantity))
+                            {
+                                <tr>
+                                    <td>Net Quantity</td>
+                                    <td>@Model.Product.NetQuantity</td>
+                                </tr>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.Product.ItemForm))
+                            {
+                                <tr>
+                                    <td>Item Form</td>
+                                    <td>@Model.Product.ItemForm</td>
+                                </tr>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.Product.DietType))
+                            {
+                                <tr>
+                                    <td>Diet Type</td>
+                                    <td>@Model.Product.DietType</td>
+                                </tr>
+                            }
+
+                            @if (Model.Product.NumberOfItems.HasValue)
+                            {
+                                <tr>
+                                    <td>Number of Items</td>
+                                    <td>@Model.Product.NumberOfItems</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <!-- Styling for the table -->
+                    <style type="text/css">
+                        
+
+                        #itemDetailsContainer {
+                            
+                        }
+
+                        table {
+                            border-collapse: collapse;
+                            width: 100%;
+                        }
+
+                        th, td {
+                            border: 1px solid #dddddd;
+                            text-align: left;
+                            padding: 8px;
+                        }
+
+                        th {
+                            background-color: #f2f2f2;
+                        }
+
+                        /* Make the first column (Attribute) bold */
+                        td:first-child {
+                            font-weight: bold;
+                        }
+
+                        /* Make the first column (Attribute) and value column take the same width */
+                        th, td {
+                            width: 50%; 
+                        }
+                    </style>
+                </div>
+
+                <!-- VNV Container -->
+                <div id="vnv-container" class="a-section a-spacing-none vnv-container">
+                    @if (Model.Product.DietType == "Vegetarian")
+                    {
+                        <!-- Display Vegetarian content -->
+                        <img src="~/images/siteIcons/veg.ico" alt="Vegetarian Image" style="max-width: 100%; height: auto;">
+                        <span>This is a <strong>Vegetarian</strong> Product.</span>
+                    }
+                    else if (Model.Product.DietType == "Non-Vegetarian")
+                    {
+                        <!-- Display Non-Vegetarian content -->
+                        <img src="~/images/siteIcons/nonveg.ico" alt="Non-Vegetarian Image" style="max-width: 100%; height: auto;">
+                        <span>This is a <strong>Non-Vegetarian</strong> Product.</span>
+                    }
+                    <style type="text/css">
+                        /* VNV Container Styling */
+                        #vnv-container {
+                            font-family: "Amazon Ember", Arial, sans-serif;
+                            font-size: 14px;
+                            line-height: 20px;
+                            text-decoration: none solid rgb(15, 17, 17);
+                            text-align: left;
+                            vertical-align: baseline;
+                            white-space: normal;
+                            word-spacing: 0px;
+                            background-color: rgba(0, 0, 0, 0);
+                            color: rgb(15, 17, 17);
+                            height: 36.28px;
+                            width: 341.1px;
+                            border: 0px none rgb(15, 17, 17);
+                            margin: 0px;
+                            margin-left: 0;
+                            padding: 5px 0px 0px;
+                            padding-top: 0px;
+                            position: relative;
+                            display: block;
+                            visibility: visible;
+                            overflow: visible;
+                            cursor: auto;
+                            border-collapse: separate;
+                            border-spacing: 0px 0px;
+                            caption-side: top;
+                            empty-cells: show;
+                            table-layout: auto;
+                            box-sizing: border-box;
+                            text-overflow: clip;
+                            word-wrap: normal;
+                        }
+                    </style>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-12">
+            @* space for right column  *@
+            <div id="right-column-box" class="border-box">
+                <div id="price-info">
+                    <p class="a-price" data-a-size="xl" data-a-color="base">
+                        <span @* class="a-price-symbol" *@></span>@Model.Product.Price.ToString("c")
+                    </p>
+                </div>
+
+                @if (Model.Product.CategoryID == 1)
+                {
+                    <div style="color: limegreen; font-family: 'Lemon-Regular', Arial, sans-serif; font-size: 18px; margin-bottom:5px;">
+                        Fresh Milk
+                    </div>
+                }
+                else if (Model.Product.CategoryID == 2)
+                {
+                    <div style="color: limegreen; font-family: 'Lemon-Regular', Arial, sans-serif; font-size: 18px; margin-bottom:5px;">
+                        Fresh Curd
+                    </div>
+                }
+                else if (Model.Product.CategoryID == 3)
+                {
+                    <div style="color: limegreen; font-family: 'Lemon-Regular', Arial, sans-serif; font-size: 18px; margin-bottom:5px;">
+                        Fresh Ghee
+                    </div>
+
+                }
+
+
+                @functions {
+
+                    DateTime GetCurrentTime()
+                    {
+                        
+                        DateTime currentTime = DateTime.Now;
+
+                        // Print current date to the debug output
+                        System.Diagnostics.Debug.WriteLine("Current Date: " + currentTime.Date.ToString("dd/MM/yyyy"));
+
+                        return currentTime;
+                    }
+
+                    // Function to get morning sales opening time
+                    DateTime GetMorningSalesOpeningTime()
+                    {
+                        
+                        return DateTime.Today.AddHours(5); // Assuming morning sales opening time is at 5 am
+                    }
+
+                    // Function to get morning sales closing time
+                    DateTime GetMorningSalesClosingTime()
+                    {
+                        
+                        return DateTime.Today.AddHours(7); // Assuming morning sales closing time is at 7 am
+                    }
+
+                    // Function to get evening sales opening time
+                    DateTime GetAfternoonSalesOpeningTime()
+                    {
+                        
+                        return DateTime.Today.AddHours(14); // Assuming evening sales opening time is at 2 pm
+                    }
+
+                    // Function to get evening sales closing time
+                    DateTime GetAfternoonSalesClosingTime()
+                    {
+                        
+                        return DateTime.Today.AddHours(16); // Assuming evening sales opening time is at 2 pm
+                    }
+
+                    // Function to get morning farm opening time
+                    DateTime GetMorningFarmOpeningTime()
+                    {
+                        // morning farm opening time is at 5 am
+                        return DateTime.Today.AddHours(5);
+                    }
+
+                    // Function to get morning farm closing time
+                    DateTime GetMorningFarmClosingTime()
+                    {
+                        // morning farm closing time is at 8 am
+                        return DateTime.Today.AddHours(8);
+                    }
+
+                    // Function to get afternoon farm opening time
+                    DateTime GetAfternoonFarmOpeningTime()
+                    {
+                        // afternoon farm opening time is at 2 pm
+                        return DateTime.Today.AddHours(14);
+                    }
+
+                    // Function to get afternoon farm closing time
+                    DateTime GetAfternoonFarmClosingTime()
+                    {
+                        // afternoon farm closing time is at 5 pm
+                        return DateTime.Today.AddHours(17);
+                    }
+                }
+
+                @{
+                    DateTime currentTime = GetCurrentTime();
+                    DateTime morningSalesOpeningTime = GetMorningSalesOpeningTime();
+                    DateTime morningSalesClosingTime = GetMorningSalesClosingTime();
+                    DateTime afternoonSalesOpeningTime = GetAfternoonSalesOpeningTime();
+                    DateTime afternoonSalesClosingTime = GetAfternoonSalesClosingTime();
+                    DateTime morningFarmOpeningTime = GetMorningFarmOpeningTime();
+                    DateTime morningFarmClosingTime = GetMorningFarmClosingTime();
+                    DateTime afternoonFarmOpeningTime = GetAfternoonFarmOpeningTime();
+                    DateTime afternoonFarmClosingTime = GetAfternoonFarmClosingTime();
+                }
+
+                @if (Model.Product.isItemInStock == "In Stock")
+                {
+                    TimeSpan timeRemaining;
+
+                    if (currentTime >= GetMorningSalesOpeningTime() && currentTime < morningSalesClosingTime)
+                    {
+                        timeRemaining = GetMorningFarmClosingTime() - currentTime;
+                        var formattedTime = FormatTimeSpan(timeRemaining);
+                        <p style="margin-bottom:5px;">
+                            <span style="color: #565959;">This is a takeaway delivery system. If ordered now, you should come and pick up the product within:</span>
+                            <span style="color: #308f46;"> @formattedTime;</span>
+                            <br />
+                            <span style="color: #007600; font-family: 'Mukta-ExtraBold'; font-size:20px;">In Stock</span>
+                        </p>
+                        <p style="text-align:left; margin-bottom:5px;">
+                            
+                            <button type="button" class="btn btn-link custom-left-align custom-location-text" data-bs-toggle="modal" data-bs-target="#locationModal">
+                                <i class="bi bi-geo-alt-fill" style="font-size: 2.0em;"></i> <span class="custom-location-text">Our Location</span>
+                            </button>
+                        </p>
+
+                        <!-- Quantity Selector -->
+                        <div class="row">
+                            <style>
+                                /* Text Box Width Adjust */
+                                .custom-width {
+                                    width: 60px; 
+
+
+                                }
+
+                                /* Styling for icons */
+                                .quantity-selector i {
+                                    font-size: 1.5em;
+                                    cursor: pointer;
+                                    border: 1px solid #ced4da; /* Border color matching input area */
+                                    border-radius: 0; /* Remove border-radius to make it visually connected */
+                                    padding: 0.25rem; /* padding for spacing */
+                                    margin: 0 -1px; /* Adjust margin to visually connect icons */
+                                    background-color: #f9f9f9; /* background color to match input area */
+                                }
+
+                                /* styling for input area */
+                                .quantity-selector input {
+                                    border: 1px solid #ced4da;
+                                    border-radius: 0;
+                                    margin: 0;
+                                    text-align: center; /* Center text horizontally */
+                                    padding-right: 0; 
+                                }
+
+                                /* styling for label */
+                                .quantity-selector span {
+                                    margin-right: 11px;
+                                    margin-top: 4px;
+                                    display: flex;
+                                }
+
+                                /* styling for the "Add to Cart" button */
+                                .add-to-cart-btn {
+                                    width: 100%;
+                                    margin-top: 20px; 
+                                }
+
+                               /*  @@media (max-width: 720px) and (max-height: 1280px) {
+            border-box {
+                width: 60%;
+            }
+        } */
+                            </style>
+
+                            <div class="d-flex quantity-selector">
+                                <span style="margin-right: 10px; margin-top:9px;">Quantity:</span> <!-- Added label on the left side -->
+                                <i class="bi bi-dash" style="font-size: 1.5em; cursor: pointer;" onclick="decreaseQuantity()"></i>
+                                    <input type="number" class="form-control quantity-input custom-width" value="1" id="quantityInput" oninput="updateQuantity()" asp-for="Count">
+                                <i class="bi bi-plus" style="font-size: 1.5em; cursor: pointer;" onclick="increaseQuantity(@Model.Product.MaxNumberOfItemsInStock)"></i>
+                            </div>
+                        </div>
+
+                        <!-- Add to Cart Button -->
+                        @* <button asp-for="Count" type="button" class="btn btn-primary add-to-cart-btn">Add to Cart</button> *@
+                            <input type="submit" value="Add To Cart" class="btn btn-primary add-to-cart-btn" />
+                    }
+
+                    else if (currentTime >= GetMorningSalesClosingTime() && currentTime < afternoonSalesOpeningTime)
+                    {
+                        <p style="color:#565959">
+                            We aren't accepting new orders right now. Products will be back on today afternoon at
+                            <span style="color: #308f46;">(@afternoonSalesOpeningTime.ToString("hh:mm tt")) [ @(currentTime.Date.ToString("dd/MM/yyyy")) ]</span>.
+                        </p>
+                    }
+
+                    else if (currentTime>= GetAfternoonSalesOpeningTime() && currentTime < afternoonSalesClosingTime)
+                    {
+                        TimeSpan afternoonTimeRemaining = GetAfternoonFarmClosingTime() - currentTime;
+                        var formattedAfternoonTime = FormatTimeSpan(afternoonTimeRemaining);
+                        <p style="margin-bottom:5px;">
+                            <span style="color: #565959;">This is a takeaway delivery system. If ordered now, you should come and pick up the product within:</span>
+                            <span style="color: #308f46;"> @formattedAfternoonTime;</span>
+                            <br />
+                            <span style="color: #007600; font-family: 'Mukta-ExtraBold'; font-size:20px;">In Stock</span>
+                        </p>
+
+                        <p style="text-align:left">
+                            
+                            <button type="button" class="btn btn-link custom-left-align custom-location-text" data-bs-toggle="modal" data-bs-target="#locationModal">
+                                <i class="bi bi-geo-alt-fill" style="font-size: 2.0em;"></i> <span class="custom-location-text">Our Location</span>
+                            </button>
+                        </p>
+
+                        <!-- Quantity Selector -->
+                        <div class="row">
+                            <style>
+                                /* Text Box Width Adjust */
+                                .custom-width {
+                                    width: 60px;
+                                }
+
+                                /* Styling for icons */
+                                .quantity-selector i {
+                                    font-size: 1.5em;
+                                    cursor: pointer;
+                                    border: 1px solid #ced4da; /* Border color matching input area */
+                                    border-radius: 0; /* Remove border-radius to make it visually connected */
+                                    padding: 0.25rem; /* padding for spacing */
+                                    margin: 0 -1px; /* Adjust margin to visually connect icons */
+                                    background-color: #f9f9f9; /* background color to match input area */
+                                }
+
+                                /* styling for input area */
+                                .quantity-selector input {
+                                    border: 1px solid #ced4da;
+                                    border-radius: 0;
+                                    margin: 0;
+                                    text-align: center; /* Center text horizontally */
+                                    padding-right: 0; 
+                                }
+
+                                /* styling for label */
+                                .quantity-selector span {
+                                    margin-right: 11px;
+                                    margin-top: 4px;
+                                    display: flex;
+                                }
+
+                                /* styling for the "Add to Cart" button */
+                                .add-to-cart-btn {
+                                    width: 100%;
+                                    margin-top: 20px; 
+                                }
+
+                                
+                            </style>
+
+                            <div class="d-flex quantity-selector">
+                                <span style="margin-right: 10px; margin-top:9px;">Quantity:</span> <!-- Added label on the left side -->
+                                <i class="bi bi-dash" style="font-size: 1.5em; cursor: pointer;" onclick="decreaseQuantity()"></i>
+                                    <input type="number" class="form-control quantity-input custom-width" value="1" id="quantityInput" oninput="updateQuantity()" asp-for="Count">
+                                <i class="bi bi-plus" style="font-size: 1.5em; cursor: pointer;" onclick="increaseQuantity(@Model.Product.MaxNumberOfItemsInStock)"></i>
+                            </div>
+                        </div>
+
+                        <!-- Add to Cart Button -->
+                            <input type="submit" value="Add To Cart" class="btn btn-primary add-to-cart-btn" />
+                    }
+
+                    else if (currentTime >= GetAfternoonSalesClosingTime())
+                    {
+                        <p>
+                            <span style="color: #565959;">We aren't accepting new orders right now. Products will be back on tomorrow morning at</span>
+                            <span style="color: #308f46;"> (@GetNextMorningSalesOpeningTime().ToString("hh:mm tt")) [ @(morningSalesOpeningTime.AddDays(1).ToString("dd/MM/yyyy")) ].</span>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <span style="color: #565959;">We aren't accepting new orders right now. Products will be back on today morning at</span>
+                            <span style="color: #308f46;"> (@GetNextMorningSalesOpeningTime().ToString("hh:mm tt")) [ @(morningSalesOpeningTime.ToString("dd/MM/yyyy")) ].</span>
+                        </p>
+                    }
+                }
+                else
+                {
+                    <p>The item is currently out of stock.</p>
+                }
+
+                @* <!-- Bootstrap Modal -->
+                <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog custom-modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title custom-location-text" id="locationModalLabel">Our Location</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3290.5440996637262!2d76.58974943668905!3d8.926482843657332!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b05fdd10824ccb1%3A0x6d48e36fef024f9a!2sKollam%20Dairy%20Farm!5e0!3m2!1sen!2sin!4v1705108335655!5m2!1sen!2sin" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div> *@
+
+                <!-- Bootstrap Modal -->
+                <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog custom-modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title custom-location-text" id="locationModalLabel">Our Location</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3290.5440996637262!2d76.58974943668905!3d8.926482843657332!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b05fdd10824ccb1%3A0x6d48e36fef024f9a!2sKollam%20Dairy%20Farm!5e0!3m2!1sen!2sin!4v1705108335655!5m2!1sen!2sin" style="border: 0; width: 100%; max-width: 800px; height: 60vh;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                @functions {
+                    // Function to get the opening time for the next morning
+                    DateTime GetNextMorningSalesOpeningTime()
+                    {
+                        
+                        DateTime tomorrowDate = DateTime.Today.AddDays(1);
+                        return tomorrowDate.AddHours(5); // morning sales opening time is at 5 am on the next day
+                    }
+
+                    string FormatTimeSpan(TimeSpan timeSpan)
+                    {
+                        if (timeSpan.Hours > 0)
+                        {
+                            return $"{timeSpan.Hours} hour{(timeSpan.Hours > 1 ? "s" : "")} {timeSpan.Minutes} minute{(timeSpan.Minutes > 1 ? "s" : "")}";
+                        }
+                        else
+                        {
+                            return $"{timeSpan.Minutes} minute{(timeSpan.Minutes > 1 ? "s" : "")}";
+                        }
+                    }
+                }
+
+
+            </div>
+
+            <style type="text/css">
+                /* Right column styling */
+                #right-column-box {
+                    border: 1px solid #bfc3c3; 
+                    padding: 15px; 
+                    margin-top: 20px; 
+                    display: flex;
+                    flex-direction: column;
+                    align-items: left;
+                    text-align:left;
+                    width:100%;
+                    margin-left:10px;
+                   
+                    
+                }
+
+                @@media (max-width: 768px){
+
+                    .row {
+                        flex-direction: column;
+                        align-items: center;
+                    }
+                    #right-column-box {
+                        width: 92%;
+                        /* margin-left: 25px; */
+                        margin-left:24px;
+                    }
+                }
+
+                @@media (min-width: 768px) and (max-width: 990px){
+                    .col-md-12 #right-column-box{
+                        width: 94%;
+                        /* margin-left: 25px; */
+                        margin-left: 33px;
+                    }
+                }
+
+                .right-column-content {
+                    text-align: left;
+                }
+
+                /* Price styling */
+                .a-price[data-a-size=xl] {
+                    font-size: 28px; /* font size for the price */
+                    color: #0F1111; /* color of the price */
+                    margin-bottom: 10px; 
+                }
+
+                .a-price[data-a-color=base] {
+                    color: #0F1111;
+                }
+
+                .a-price {
+                    text-decoration: none;
+                    position: relative;
+                    line-height: normal;
+                }
+
+                #price-info {
+                    margin-bottom: -10px; 
+                }
+
+                /* Rupee symbol styling */
+                .a-price[data-a-size=xl] .a-price-symbol {
+                    top: -.75em;
+                    font-size: 13px;
+                    position: relative;
+                }
+
+                .custom-left-align { /* for our location moving left */
+                    text-align: left;
+                    padding-left:0px; 
+                    padding-top:0px;
+                    margin-top:0px;
+                }
+
+                .custom-modal-dialog {
+                    max-width: 62.4%; 
+                }
+
+                .custom-location-text {
+                    font-size: 17px;
+                    color: #14134e;
+                    font-family: 'Cabin-Bold', 'Cabin', sans-serif;
+                    font-weight: bold;
+                    text-transform: none;
+                    text-decoration: none;
+                }
+
+               
+
+            </style>
+
+            @section Scripts{
+                <script>
+                        
+                    function increaseQuantity() {
+                            
+                        var quantityInput = document.getElementById('quantityInput');
+                        quantityInput.value = parseInt(quantityInput.value) + 1;
+                    }
+
+                    function decreaseQuantity() {
+                        var quantityInput = document.getElementById('quantityInput');
+                        if (parseInt(quantityInput.value) > 1) {
+                            quantityInput.value = parseInt(quantityInput.value) - 1;
+                        }
+                    }
+
+                    function updateQuantity() {
+                            
+                            var quantityInput = document.getElementById('quantityInput');
+                            var currentQuantity = parseInt(quantityInput.value);
+
+                            // Log the current quantity to the console
+                            console.log('Current Quantity:', currentQuantity);
+                    }
+                </script>
+
+                <script>
+                    function increaseQuantity(maxItemsInStock) {
+                        var quantityInput = document.getElementById('quantityInput');
+                        var currentQuantity = parseInt(quantityInput.value);
+
+                        if (currentQuantity < maxItemsInStock) {
+                                console.log('Script loaded!');
+                            quantityInput.value = currentQuantity + 1;
+                                
+                        } else {
+                            // Display a message or handle the case where the max limit is reached
+                            console.log('Maximum limit reached');
+                        }
+
+                        updateQuantity();
+                    }
+
+                            
+                </script>
+
+            }
+
+        </div>
+    </div>
+</div>
+</form>

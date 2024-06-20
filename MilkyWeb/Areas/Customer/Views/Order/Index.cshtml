@@ -1,0 +1,83 @@
+﻿@model List<OrderVM>
+
+@{
+
+    // Define the list of allowed order statuses
+    var allowedStatuses = new List<string> { "Approved", "Processing", "Ready For Pickup", "Cancelled", "Refunded", "Completed" };
+
+    // Filter the orders based on the allowed order statuses and sort them by order date in descending order
+    var sortedOrders = Model.Where(o => allowedStatuses.Contains(o.OrderHeader.OrderStatus))
+                            .OrderByDescending(o => o.OrderHeader.OrderDate)
+                            .ToList();
+}
+
+
+<div class="row">
+    <div class=" offset-1 col-10">
+        <h1 class="text-start mb-4">Your Orders</h1>
+    </div>
+    @foreach (var orderVM in sortedOrders)
+    {
+        <div class="offset-1 col-10 col-lg-10 mb-4">
+            <div class="card">
+                <div class="card-header row">
+                    <div class="col">
+                    <h5 class="card-title">Order Date: @orderVM.OrderHeader.OrderDate.ToShortDateString()</h5>
+                    </div>
+                    <div class="col">
+                    <p class="card-text">Order Total: @orderVM.OrderHeader.OrderTotal.ToString("c")</p>
+                    </div>
+                    <div class="col">
+                    <p class="card-text">Secret-Key: @orderVM.OrderHeader.UniqueCode</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                   <h5 class="card-subtitle mb-3 text-muted">
+                        Order Status: <span class="@GetOrderStatusTextColor(orderVM.OrderHeader.OrderStatus)"> 
+                            @orderVM.OrderHeader.OrderStatus
+                        </span>
+                   </h5>
+                    <!-- Loop through order details for this order -->
+                    @foreach (var orderDetail in orderVM.OrderDetail)
+                    {
+                        <div class="media mb-2">
+                            <div class="row">
+                                <div class="col-md-2 text-center">
+                                    <img src="@orderDetail.Product.ImageUrl" class="mr-3 mb-2" alt="@orderDetail.Product.ProductName" style="width: 100px;">
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="media-body">
+                                        <h6 class="mt-0 text-primary"><strong>@orderDetail.Product.ProductName</strong></h6>
+                                        <p>Count: <span class="text-primary">x</span>@orderDetail.Count</p>
+                                        <!-- Add more details as needed -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@functions {
+    // Helper function to map order status to Bootstrap text color class
+    string GetOrderStatusTextColor(string orderStatus)
+    {
+        switch (orderStatus)
+        {
+            case "Approved":
+                return "text-primary";
+            case "Ready For Pickup":
+                return "text-success";
+            case "Cancelled":
+                return "text-danger";
+            case "Processing":
+                return "text-warning";
+            default:
+                return "text-primary";
+        }
+    }
+}
+

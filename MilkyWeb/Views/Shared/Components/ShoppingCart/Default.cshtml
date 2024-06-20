@@ -1,0 +1,12 @@
+﻿@model int 
+
+<span id="cartCount">
+	@if(Model != null)
+	{
+		@("(" + Model + ")")
+	}
+	else
+	{
+		@(0)
+	}
+</span>

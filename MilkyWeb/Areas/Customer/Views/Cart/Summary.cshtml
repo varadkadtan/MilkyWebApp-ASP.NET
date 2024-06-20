@@ -1,0 +1,136 @@
+﻿@model ShoppingCartVM
+
+<form method="post">
+	<div class="container-fluid">
+		<div class="row justify-content-center">
+			<div class="card border-0" style="border-radius: 0px; background-color:#F8F8FF; border-color: rgb(221, 221, 221); box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+				<div class="col-lg-12">
+					<div class="card-header" style="height: 70px; padding-top: 1px; border-radius: 0px;">
+						<h1 class="roboto-slab-heading  card-title text-center text-primary">Checkout</h1>
+						<style>
+							.roboto-slab-heading {
+								font-family: "Roboto Slab", serif;
+								font-optical-sizing: auto;
+								font-weight: 600; /* Adjust the weight based on your preference (100 to 900) */
+								font-style: normal;
+							}
+						</style>
+					</div>
+					<div class="card-body bg-white">
+						<div class="container">
+							<div class="row">
+								<div class="col-lg-6 col-sm-12">
+									<div class="row">
+										<h4 class="d-flex justify-content-between align-items-center mb-3">
+											<span style="color: #1e8090">Confirm Name & Phone Number :</span>
+										</h4>
+									</div>
+									<div class="row my-1 mb-3">
+										<div class="col-3 ms-0">
+											Full Name
+										</div>
+										<div class="col-lg-9 col-sm-12">
+											<input type="text" asp-for="OrderHeader.Name" class=" custom-margin-lg form-control" />
+											<style>
+												@@media (min-width: 992px) { /* lg breakpoint */
+													.col-lg-9 .custom-margin-lg {
+														margin-left: -15px;
+														width:390px;
+													}
+												}
+											</style>
+										</div>
+									</div>
+									<div class="row my-1">
+										<div class="col-lg-3 col-sm-12">Phone Number</div>
+										<div class="col-lg-9 col-sm-12">
+											<div class="input-group">
+												<span class="input-group-text">+91</span>
+												<input type="text" class="form-control" placeholder=" Enter your phone number" autocomplete="on" maxlength="10" name="OrderHeader.PhoneNumber"
+												@if (!string.IsNullOrEmpty(Model.OrderHeader.PhoneNumber))
+												{
+													@($"value={Model.OrderHeader.PhoneNumber.Substring(2)}")
+												}
+													    />
+											</div>
+										</div>
+									</div>
+
+									<style>
+
+										@@media (min-width: 992px) {
+											.input-group {
+												margin-left: -15px; /* Adjust the value as needed */
+												width:390px;
+											}
+										}
+
+										.input-group {
+											position: relative;
+										}
+
+										.input-group-text {
+											background-color: #e9ecef; /* Change this color as needed */
+											color: #495057; /* Change this color as needed */
+											border: none;
+											border-radius: 0;
+											padding: 0.375rem 0.75rem;
+										}
+
+										.input-group > input {
+											border-radius: 0;
+										}
+
+										.input-group > .form-control {
+											border-top-left-radius: 0;
+											border-bottom-left-radius: 0;
+											border-left: none;
+											padding-left: 0;
+										}
+									</style>
+
+									<p class="text-muted mt-3">Note: We may use your phone number to provide order updates or contact you in case of any issues with your order. Your privacy is important to us.</p>
+
+
+								</div>
+								<div class="col-lg-5 col-12 offset-lg-1">
+									<div class="row">
+										<div class="col-12">
+											<h4 style="color: #1e8090;">Order Summary</h4>
+											<table class="table table-bordered table-striped">
+												<thead>
+													<tr>
+														<th class="text-primary" colspan="2">Order Total</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td style="color: #1e8090;width:260px;">Total (INR)</td>
+														<td style="color: #1e8090;"><strong> @Model.OrderHeader.OrderTotal.ToString("c")</strong></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-footer">
+						<div class="container">
+							<div class="row justify-content-lg-start">
+								<div class="col-12 col-lg-12">
+									<div class="row my-1">
+										<div class="col-12 col-lg-3">
+											<button type="submit" class="btn btn-primary w-100">Use this Details </button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
